@@ -83,7 +83,10 @@ class MyModel(BaseModel):
 
             # Forward pass
             outputs = self.model(images)
-            loss = self.criterion(outputs, labels if config.model == "CNN" else labels.view(-1,1).type(torch.FloatTensor))
+            if config.model == "CNN":
+                loss = self.criterion(outputs, labels)
+            else:
+                loss = self.criterion(outputs, labels.view(-1,1).type(torch.FloatTensor).to(self.device))
             self._auto_backward(loss)
 
             prog.update(i + 1, [("loss", loss.item()), ("lr", lr_schedule.lr)])
