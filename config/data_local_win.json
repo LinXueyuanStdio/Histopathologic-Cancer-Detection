@@ -1,0 +1,15 @@
+{
+    "export_name": "data.json",
+
+    "dir_images_train": "d:/project/AI.Health.kaggle/train/",
+    "dir_images_test" : "d:/project/AI.Health.kaggle/test/",
+    "dir_images_val"  : "d:/project/AI.Health.kaggle/val/",
+
+    "path_label_train": "data/full_train_labels.csv",
+    "path_label_test" : "data/full_test_labels.csv",
+    "path_label_val"  : "data/full_val_labels.csv",
+
+    "bucket_train": true,
+    "bucket_val": true,
+    "bucket_test": true
+}

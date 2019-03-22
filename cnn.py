@@ -165,7 +165,7 @@ model.eval()
 
 preds = []
 for batch_i, (data, target) in enumerate(loader_test):
-    # data, target = data.cuda(), target.cuda()
+    data, target = data.cuda(), target.cuda()
     output = model(data)
 
     pr = output[:, 1].detach().cpu().numpy()
