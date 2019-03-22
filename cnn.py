@@ -1,10 +1,10 @@
 # Libraries
-from torch.utils.data import TensorDataset, DataLoader, Dataset
-import torchvision.transforms as transforms
-import torchvision
-import torch.nn.functional as F
-import torch.nn as nn
 import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.utils.data import TensorDataset, DataLoader, Dataset
+import torchvision
+import torchvision.transforms as transforms
 from sklearn.model_selection import train_test_split
 import os
 import numpy as np
@@ -16,26 +16,29 @@ import matplotlib.pyplot as plt
 # Parameters for model
 
 # Hyper parameters
-num_epochs = 8
+num_epochs = 10
 num_classes = 2
-batch_size = 128
+batch_size = 100
 learning_rate = 0.002
 
 # Device configuration
 device = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
 
+
 data_dir = '/data0/yanglab/competitions/Histopathologic_Cancer_Detection/data/'
+
 train_path = data_dir+'train/'
 test_path = data_dir+'test/'
-train_label_path = data_dir+'train_labels.csv'
+train_label_path = label_dir+'train_labels.csv'
+test_label_path = label_dir+'sample_submission.csv'
 
 labels = pd.read_csv(train_label_path)
-sub = pd.read_csv(data_dir+'sample_submission.csv')
+sub = pd.read_csv(test_label_path)
 
 
 # Splitting data into train and val
-train, val = train_test_split(labels, stratify=labels.label, test_size=0.1)
-len(train), len(val)
+train, val = train_test_split(labels, stratify=labels.label, test_size=0.2)
+print(len(train), len(val))
 
 
 class MyDataset(Dataset):
@@ -82,14 +85,14 @@ class SimpleCNN(nn.Module):
         # ancestor constructor call
         super(SimpleCNN, self).__init__()
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=2)
-        self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=2)
-        self.conv3 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, padding=2)
-        self.conv4 = nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3, padding=2)
-        self.conv5 = nn.Conv2d(in_channels=256, out_channels=512, kernel_size=3, padding=2)
         self.bn1 = nn.BatchNorm2d(32)
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=2)
         self.bn2 = nn.BatchNorm2d(64)
+        self.conv3 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, padding=2)
         self.bn3 = nn.BatchNorm2d(128)
+        self.conv4 = nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3, padding=2)
         self.bn4 = nn.BatchNorm2d(256)
+        self.conv5 = nn.Conv2d(in_channels=256, out_channels=512, kernel_size=3, padding=2)
         self.bn5 = nn.BatchNorm2d(512)
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
         self.avg = nn.AvgPool2d(8)
@@ -130,7 +133,7 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
 
-        if (i+1) % 100 == 0:
+        if (i+1) % 2 == 0:
             print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'
                   .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
 
@@ -148,10 +151,14 @@ with torch.no_grad():
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
 
-    print('Test Accuracy of the model on the 22003 test images: {} %'.format(100 * correct / total))
+    print('Test Accuracy of the model on the test images: {} %'.format(100 * correct / total))
 
 # Save the model checkpoint
 torch.save(model.state_dict(), 'model.ckpt')
+
+
+
+
 dataset_valid = MyDataset(df_data=sub, data_dir=test_path, transform=trans_valid)
 loader_test = DataLoader(dataset=dataset_valid, batch_size=32, shuffle=False, num_workers=0)
 
@@ -159,12 +166,12 @@ model.eval()
 
 preds = []
 for batch_i, (data, target) in enumerate(loader_test):
-    data, target = data.cuda(), target.cuda()
+    # data, target = data.cuda(), target.cuda()
     output = model(data)
 
     pr = output[:, 1].detach().cpu().numpy()
     for i in pr:
         preds.append(i)
-sub.shape, len(preds)
+print(sub.shape, len(preds))
 sub['label'] = preds
 sub.to_csv('s.csv', index=False)
