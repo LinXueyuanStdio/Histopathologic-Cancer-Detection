@@ -37,7 +37,7 @@ def main(data, training, model, output):
     loader_valid = DataLoader(dataset=dataset_valid, batch_size=config.batch_size//2, shuffle=False, num_workers=3)
 
     # Define learning rate schedule
-    n_batches_epoch = ((len(loader_train) + config.batch_size - 1) // config.batch_size)
+    n_batches_epoch = len(loader_train)
     lr_schedule = LRSchedule(lr_init=config.lr_init,
             start_decay=config.start_decay*n_batches_epoch,
             end_decay=config.end_decay*n_batches_epoch,

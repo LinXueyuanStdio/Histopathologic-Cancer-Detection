@@ -103,11 +103,10 @@ def write_answers(references, hypotheses, dir_name):
         print("writting file ", file_name)
         with open(file_name, "w") as f:
             for line in list_of_list:
-                f.write(line + "\n")
+                f.write(str(line) + "\n")
 
     init_dir(dir_name)
     file_names = [dir_name + "ref.csv", dir_name + "hyp.csv"]
-    print(references, hypotheses)
     assert len(references) == len(hypotheses)
     write_file(file_names[0], references)
     write_file(file_names[1], hypotheses)

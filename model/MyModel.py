@@ -35,7 +35,7 @@ class MyModel(BaseModel):
             config: from "training.json"
 
         """
-        self.logger.info("Building model...")
+        self.logger.info("- Building model...")
 
         self.device = torch.device(config.device if torch.cuda.is_available() else 'cpu')
         self.model = SimpleCNN().to(self.device)
@@ -45,7 +45,7 @@ class MyModel(BaseModel):
         self.logger.info("- done.")
 
     def build_pred(self):
-        self.logger.info("Building model...")
+        self.logger.info("- Building model...")
 
         # self.device = torch.device(config.device if torch.cuda.is_available() else 'cpu')
         self.model = SimpleCNN()#.to(self.device)
@@ -92,10 +92,10 @@ class MyModel(BaseModel):
         # evaluation
         config_eval = Config({"dir_answers": self._dir_output + "formulas_val/", "batch_size": config.batch_size})
         scores = self.evaluate(config_eval, val_set)
-        score = scores[config.metric_val]
+        score = scores["acc"]
         lr_schedule.update(score=score)
 
-        return score
+        return -score
 
     def _run_evaluate_epoch(self, config, test_set):
         """Performs an epoch of evaluation
@@ -128,7 +128,7 @@ class MyModel(BaseModel):
                     preds.append(i)
             print('Test Accuracy {} %'.format(100 * correct / total))
 
-        files = write_answers(labels, preds, config.dir_answers)
+        files = write_answers(refs, preds, config.dir_answers)
 
         return {
             "acc": 100 * correct / total
