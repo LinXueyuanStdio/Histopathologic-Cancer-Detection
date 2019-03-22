@@ -175,7 +175,7 @@ def get_model_classif_nasnet():
 
 model = get_model_classif_nasnet()
 
-batch_size = 32
+batch_size = 1
 h5_path = "model.h5"
 checkpoint32 = ModelCheckpoint(h5_path, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 checkpoint64 = ModelCheckpoint(h5_path, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
@@ -185,16 +185,16 @@ history = model.fit_generator(
     validation_data=data_gen(val, id_label_map, batch_size),
     epochs=2, verbose=1,
     callbacks=[checkpoint32],
-    steps_per_epoch=len(train) // batch_size,
-    validation_steps=len(val) // batch_size)
-batch_size = 64
-history = model.fit_generator(
-    data_gen(train, id_label_map, batch_size, augment=True),
-    validation_data=data_gen(val, id_label_map, batch_size),
-    epochs=6, verbose=1,
-    callbacks=[checkpoint64],
-    steps_per_epoch=len(train) // batch_size,
-    validation_steps=len(val) // batch_size)
+    steps_per_epoch=9,#len(train) // batch_size,
+    validation_steps=1)#len(val) // batch_size)
+# batch_size = 5
+# history = model.fit_generator(
+#     data_gen(train, id_label_map, batch_size, augment=True),
+#     validation_data=data_gen(val, id_label_map, batch_size),
+#     epochs=6, verbose=1,
+#     callbacks=[checkpoint64],
+#     steps_per_epoch=len(train) // batch_size,
+#     validation_steps=len(val) // batch_size)
 
 model.load_weights(h5_path)
 
