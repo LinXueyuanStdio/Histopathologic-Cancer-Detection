@@ -22,9 +22,9 @@ batch_size = 128
 learning_rate = 0.002
 
 # Device configuration
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
 
-data_dir = '/mnt/d/project/AI.Health.kaggle/'
+data_dir = '/data0/yanglab/competitions/Histopathologic_Cancer_Detection/data/'
 train_path = data_dir+'train/'
 test_path = data_dir+'test/'
 train_label_path = data_dir+'train_labels.csv'
