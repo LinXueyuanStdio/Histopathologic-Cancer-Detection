@@ -1,10 +1,10 @@
 {
     "export_name": "training.json",
-    "device": "cuda:0",
+    "device": "cuda:1",
     "lr_method": "Adam",
     "criterion_method": "BCEWithLogitsLoss",
-    "n_epochs": 2,
-    "batch_size": 10,
+    "n_epochs": 10,
+    "batch_size": 100,
     "dropout": 1,
     "lr_init": 1e-3,
     "lr_min": 1e-4,
