@@ -73,12 +73,14 @@ class BaseModel(object):
             criterion_method: (string) criterion method, for example "CrossEntropyLoss"
 
         """
-        _criterion_method = criterion_method.lower()  # lower to make sure
+        _criterion_method = criterion_method
 
-        if _criterion_method == 'crossentropyloss':  # sgd method
+        if _criterion_method == 'CrossEntropyLoss':
             self.criterion = torch.nn.CrossEntropyLoss()
-        elif _criterion_method == 'mseloss':
+        elif _criterion_method == 'MSELoss':
             self.criterion = torch.nn.MSELoss()
+        elif _criterion_method == 'BCEWithLogitsLoss':
+            self.criterion = torch.nn.BCEWithLogitsLoss()
         else:
             raise NotImplementedError("Unknown method {}".format(_criterion_method))
 

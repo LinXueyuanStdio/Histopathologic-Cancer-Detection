@@ -1,5 +1,6 @@
 from model.BaseModel import BaseModel
 from model.components.SimpleCNN import SimpleCNN
+from model.components.ResNet import ResNet9
 from model.utils.Progbar import Progbar
 from model.utils.Config import Config
 from model.utils.general import write_answers
@@ -38,7 +39,11 @@ class MyModel(BaseModel):
         self.logger.info("- Building model...")
 
         self.device = torch.device(config.device if torch.cuda.is_available() else 'cpu')
-        self.model = SimpleCNN().to(self.device)
+        if config.model == "CNN":
+            self.model = SimpleCNN()
+        else:
+            self.model = ResNet9()
+        self.model = self.model.to(self.device)
         self._add_criterion(config.criterion_method)
         self._add_optimizer(config.lr_method, config.lr_init)
 
@@ -78,7 +83,7 @@ class MyModel(BaseModel):
 
             # Forward pass
             outputs = self.model(images)
-            loss = self.criterion(outputs, labels)
+            loss = self.criterion(outputs, labels if config.model == "CNN" else labels.view(-1,1).type(torch.FloatTensor))
             self._auto_backward(loss)
 
             prog.update(i + 1, [("loss", loss.item()), ("lr", lr_schedule.lr)])
@@ -88,9 +93,12 @@ class MyModel(BaseModel):
         # logging
         self.logger.info("- Training: {}".format(prog.info))
 
-        self.model.eval()
         # evaluation
-        config_eval = Config({"dir_answers": self._dir_output + "formulas_val/", "batch_size": config.batch_size})
+        config_eval = Config({
+                "dir_answers": self._dir_output + "formulas_val/",
+                "batch_size": config.batch_size,
+                "model": config.model
+            })
         scores = self.evaluate(config_eval, val_set)
         score = scores["acc"]
         lr_schedule.update(score=score)
@@ -109,6 +117,7 @@ class MyModel(BaseModel):
             scores: (dict) scores["acc"] = 0.85 for instance
 
         """
+        self.model.eval()
         with torch.no_grad():
             correct = 0
             total = 0
@@ -123,7 +132,10 @@ class MyModel(BaseModel):
                 for j in labels.tolist():
                     refs.append(j)
                 correct += (predicted == labels).sum().item()
-                pr = outputs[:, 1].detach().cpu().numpy()
+                if config.model == "CNN":
+                    pr = outputs[:, 1].detach().cpu().numpy()
+                else:
+                    pr = outputs[:].detach().cpu().numpy()
                 for i in pr:
                     preds.append(i)
             print('Test Accuracy {} %'.format(100 * correct / total))

@@ -1,3 +1,4 @@
 {
-    "export_name": "model.json"
+    "export_name": "model.json",
+    "model": "CNN"
 }
