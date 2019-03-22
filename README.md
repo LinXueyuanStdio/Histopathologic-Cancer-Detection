@@ -24,3 +24,11 @@ nvidia-smi
 ```
 `ResNet9` 一定要用 `BCEWithLogitsLoss`
 `CNN` 一定要用 `CrossEntropyLoss`
+
+## 评价
+
+|    模型     | 准确率 |
+| :---------: | :----: |
+|     CNN     |   95   |
+|   ResNet9   |        |
+| Densenet169 |        |
