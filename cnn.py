@@ -29,9 +29,10 @@ label_dir = './data/'
 train_path = data_dir+'train/'
 test_path = data_dir+'test/'
 train_label_path = label_dir+'train_labels.csv'
+test_label_path = label_dir+'sample_submission.csv'
 
 labels = pd.read_csv(train_label_path)
-sub = pd.read_csv(label_dir+'sample_submission.csv')
+sub = pd.read_csv(test_label_path)
 
 
 # Splitting data into train and val
@@ -153,6 +154,10 @@ with torch.no_grad():
 
 # Save the model checkpoint
 torch.save(model.state_dict(), 'model.ckpt')
+
+
+
+
 dataset_valid = MyDataset(df_data=sub, data_dir=test_path, transform=trans_valid)
 loader_test = DataLoader(dataset=dataset_valid, batch_size=32, shuffle=False, num_workers=0)
 
