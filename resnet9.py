@@ -22,7 +22,8 @@ from torch import Tensor
 from torchvision import transforms
 from torch.autograd import Variable
 
-data_dir = 'd:/project/AI.Health.kaggle/'
+# data_dir = 'd:/project/AI.Health.kaggle/'
+data_dir = '/mnt/d/project/AI.Health.kaggle/'
 label_dir = './data/'
 train_path = data_dir + 'train/'
 test_path = data_dir + 'test/'
@@ -274,6 +275,7 @@ resnet9 = train_one_epoch(
     valid_loss_trigger,
     train_loss_trigger,
 )
+# resnet9.load_state_dict(torch.load("results/local/model_weights/model.cpkt", map_location="cpu"))
 
 y_true, y_hat = predict(resnet9, valid_dataloader)
 

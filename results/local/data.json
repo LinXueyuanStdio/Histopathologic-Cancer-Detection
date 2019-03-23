@@ -1,13 +1,13 @@
 {
     "export_name": "data.json",
 
-    "dir_images_train": "/data0/yanglab/competitions/Histopathologic_Cancer_Detection/data/train/",
-    "dir_images_test" : "/data0/yanglab/competitions/Histopathologic_Cancer_Detection/data/test/",
-    "dir_images_val"  : "/data0/yanglab/competitions/Histopathologic_Cancer_Detection/data/val/",
+    "dir_images_train": "/mnt/d/project/AI.Health.kaggle/train/",
+    "dir_images_test" : "/mnt/d/project/AI.Health.kaggle/test/",
+    "dir_images_val"  : "/mnt/d/project/AI.Health.kaggle/val/",
 
-    "path_label_train": "data/full_train_labels.csv",
-    "path_label_val"  : "data/full_val_labels.csv",
-    "path_label_test" : "data/full_test_labels.csv",
+    "path_label_train": "data/small_train_labels.csv",
+    "path_label_test" : "data/small_test_labels.csv",
+    "path_label_val"  : "data/small_val_labels.csv",
 
     "bucket_train": true,
     "bucket_val": true,

@@ -36,20 +36,11 @@ def main(data, training, model, output):
     loader_train = DataLoader(dataset=dataset_train, batch_size=config.batch_size, shuffle=True, num_workers=3)
     loader_valid = DataLoader(dataset=dataset_valid, batch_size=config.batch_size//2, shuffle=False, num_workers=3)
 
-    # Define learning rate schedule
-    n_batches_epoch = len(loader_train)
-    lr_schedule = LRSchedule(lr_init=config.lr_init,
-            start_decay=config.start_decay*n_batches_epoch,
-            end_decay=config.end_decay*n_batches_epoch,
-            end_warm=config.end_warm*n_batches_epoch,
-            lr_warm=config.lr_warm,
-            lr_min=config.lr_min)
-
     # Build model and train
     model = MyModel(config, dir_output)
-    model.build_train(config)
+    model.build_pred(config)
     model.restore()
-    model.train(config, loader_train, loader_valid, lr_schedule)
+    model.evaluate(config, loader_valid)
 
 
 if __name__ == "__main__":

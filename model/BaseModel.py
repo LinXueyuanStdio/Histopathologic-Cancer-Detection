@@ -89,7 +89,7 @@ class BaseModel(object):
         loss.backward()
         self.optimizer.step()
 
-    def restore(self, model_path=None):
+    def restore(self, model_path=None, map_location='cpu'):
         """Reload weights into session
 
         Args:
@@ -99,9 +99,9 @@ class BaseModel(object):
         """
         self.logger.info("Reloading the latest trained model...")
         if model_path == None:
-            self.model.load_state_dict(torch.load(self._model_path))
+            self.model.load_state_dict(torch.load(self._model_path, map_location=map_location))
         else:
-            self.model.load_state_dict(torch.load(model_path))
+            self.model.load_state_dict(torch.load(model_path, map_location=map_location))
 
     def save(self):
         """Saves model"""

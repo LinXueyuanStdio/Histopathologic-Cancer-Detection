@@ -5,17 +5,6 @@ from model.utils.Progbar import Progbar
 from model.utils.Config import Config
 from model.utils.general import write_answers
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch.utils.data import TensorDataset, DataLoader, Dataset
-import torchvision
-import torchvision.transforms as transforms
-from sklearn.model_selection import train_test_split
-import os
-import numpy as np
-import pandas as pd
-import cv2
-import matplotlib.pyplot as plt
 
 
 class MyModel(BaseModel):
@@ -49,11 +38,15 @@ class MyModel(BaseModel):
 
         self.logger.info("- done.")
 
-    def build_pred(self):
+    def build_pred(self, config):
         self.logger.info("- Building model...")
 
-        # self.device = torch.device(config.device if torch.cuda.is_available() else 'cpu')
-        self.model = SimpleCNN()#.to(self.device)
+        self.device = torch.device(config.device if torch.cuda.is_available() else 'cpu')
+        if config.model == "CNN":
+            self.model = SimpleCNN()
+        else:
+            self.model = ResNet9()
+        self.model = self.model.to(self.device)
 
         self.logger.info("- done.")
 
@@ -86,7 +79,7 @@ class MyModel(BaseModel):
             if config.model == "CNN":
                 loss = self.criterion(outputs, labels)
             else:
-                loss = self.criterion(outputs, labels.view(-1,1).type(torch.FloatTensor).to(self.device))
+                loss = self.criterion(outputs, labels.view(-1, 1).type(torch.FloatTensor).to(self.device))
             self._auto_backward(loss)
 
             prog.update(i + 1, [("loss", loss.item()), ("lr", lr_schedule.lr)])
@@ -98,10 +91,10 @@ class MyModel(BaseModel):
 
         # evaluation
         config_eval = Config({
-                "dir_answers": self._dir_output + "formulas_val/",
-                "batch_size": config.batch_size,
-                "model": config.model
-            })
+            "dir_answers": self._dir_output + "formulas_val/",
+            "batch_size": config.batch_size,
+            "model": config.model
+        })
         scores = self.evaluate(config_eval, val_set)
         score = scores["acc"]
         lr_schedule.update(score=score)
@@ -131,6 +124,7 @@ class MyModel(BaseModel):
                 labels = labels.to(self.device)
                 outputs = self.model(images)
                 _, predicted = torch.max(outputs.data, 1)
+
                 total += labels.size(0)
                 for j in labels.tolist():
                     refs.append(j)
@@ -141,9 +135,18 @@ class MyModel(BaseModel):
                     pr = outputs[:].detach().cpu().numpy()
                 for i in pr:
                     preds.append(i)
+
+                print(predicted)
+                print()
+                print(labels)
+                print()
+                print(refs)
+                print()
+                print(preds)
+                break
             print('Test Accuracy {} %'.format(100 * correct / total))
 
-        files = write_answers(refs, preds, config.dir_answers)
+        write_answers(refs, preds, config.dir_answers)
 
         return {
             "acc": 100 * correct / total
