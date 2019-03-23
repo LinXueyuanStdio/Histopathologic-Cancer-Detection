@@ -144,10 +144,6 @@ class MyModel(BaseModel):
                     for i in pr:
                         preds.append(1 if i[0] > 0 else 0)
                 total = len(refs)
-                print(np.asarray(refs).reshape(-1) == np.asarray(preds).reshape(-1))
-                print(len((np.asarray(refs).reshape(-1) == np.asarray(preds).reshape(-1)).tolist()))
-                print(refs[:5])
-                print(preds[:5])
                 correct = (np.asarray(refs).reshape(-1) == np.asarray(preds).reshape(-1)).sum().item()
                 prog.update(k + 1, [("acc", correct / total), ("correct", correct), ("total", total)])
         self.logger.info("- Evaluating: {}".format(prog.info))
