@@ -27,14 +27,10 @@ def main(data, training, model, output):
 
     # Load datasets
 #     train_ids, cv_ids, train_labels, cv_labels = generate_split(train_label_path, wsi_path)
-    labels = pd.read_csv(config.path_label_train)
-    train, val = train_test_split(labels, stratify=labels.label, test_size=0.2)
-    print(len(train), len(val))
+    labels = pd.read_csv(config.path_label_test)
+    print(labels.shape)
 
-    dataset_train = DataFrameDataset(df_data=train, data_dir=config.dir_images_train, transform=trans_train)
-    dataset_valid = DataFrameDataset(df_data=val, data_dir=config.dir_images_train, transform=trans_valid)
-
-    loader_train = DataLoader(dataset=dataset_train, batch_size=config.batch_size, shuffle=True, num_workers=3)
+    dataset_valid = DataFrameDataset(df_data=labels, data_dir=config.dir_images_test, transform=trans_valid)
     loader_valid = DataLoader(dataset=dataset_valid, batch_size=config.batch_size//2, shuffle=False, num_workers=3)
 
     # Build model and train
