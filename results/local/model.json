@@ -1,4 +1,4 @@
 {
     "export_name": "model.json",
-    "model": "ResNet9"
+    "model": "CNN"
 }

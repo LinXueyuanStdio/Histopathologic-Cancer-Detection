@@ -65,7 +65,10 @@ def main(data, training, model, output, gpu):
     config.device = "cuda:"+gpu
     config.save(dir_output)
 
-    loader_train, loader_valid, val = getTorchDataLoaderByWSI(config)
+    if config.wsi:
+        loader_train, loader_valid, val = getTorchDataLoaderByWSI(config)
+    else:
+        loader_train, loader_valid, val = getTorchDataLoaderByRandomPatch(config)
 
     # Define learning rate schedule
     n_batches_epoch = len(loader_train)
