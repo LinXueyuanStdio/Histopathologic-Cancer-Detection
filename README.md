@@ -30,5 +30,10 @@ nvidia-smi
 |    模型     | 准确率 |
 | :---------: | :----: |
 |     CNN     |   95   |
-|   ResNet9   |        |
+|   ResNet9   | 97.34  |
 | Densenet169 |        |
+
+## 训练
+```
+python train.py --data="config/data_remote.json" --training="config/training_remote.json" --model="config/model_remote.json" --output="result/cnn/" --gpu="2"
+```
