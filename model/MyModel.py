@@ -121,14 +121,14 @@ class MyModel(BaseModel):
 
         """
         self.model.eval()
-        nbatches = len(test_set)
-        prog = Progbar(nbatches)
         with torch.no_grad():
+            nbatches = len(test_set)
+            prog = Progbar(nbatches)
             correct = 0
             total = 0
             preds = []
             refs = []
-            for i, (images, labels) in enumerate(test_set):
+            for k, (images, labels) in enumerate(test_set):
                 images = images.to(self.device)
                 labels = labels.to(self.device)
                 outputs = self.model(images)
@@ -145,7 +145,7 @@ class MyModel(BaseModel):
                         preds.append(1 if i[0] > 0 else 0)
                 total += len(refs)
                 correct += (np.asarray(refs) == np.asarray(preds)).sum().item()
-                prog.update(i + 1, [("acc", 100 * correct / total)])
+                prog.update(k + 1, [("acc", 100 * correct / total)])
         self.logger.info("- Evaluating: {}".format(prog.info))
         write_answers(refs, preds, config.dir_answers, path_label)
 
