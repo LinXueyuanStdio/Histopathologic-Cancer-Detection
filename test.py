@@ -23,6 +23,7 @@ def main(data, training, model, output):
     dir_output = output
     config = Config([data, training, model])
     config.save(dir_output)
+    config.dir_answers = dir_output + "formulas_test/"
 
     # Load datasets
 #     train_ids, cv_ids, train_labels, cv_labels = generate_split(train_label_path, wsi_path)

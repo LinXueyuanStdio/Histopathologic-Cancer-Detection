@@ -4,6 +4,7 @@ from model.components.ResNet import ResNet9
 from model.utils.Progbar import Progbar
 from model.utils.Config import Config
 from model.utils.general import write_answers
+import numpy as np
 import torch
 
 
@@ -123,27 +124,19 @@ class MyModel(BaseModel):
                 images = images.to(self.device)
                 labels = labels.to(self.device)
                 outputs = self.model(images)
-                _, predicted = torch.max(outputs.data, 1)
 
-                total += labels.size(0)
                 for j in labels.tolist():
                     refs.append(j)
-                correct += (predicted == labels).sum().item()
                 if config.model == "CNN":
                     pr = outputs[:, 1].detach().cpu().numpy()
+                    for i in pr:
+                        preds.append(1 if i > 0 else 0)
                 else:
                     pr = outputs[:].detach().cpu().numpy()
-                for i in pr:
-                    preds.append(i)
-
-                print(predicted)
-                print()
-                print(labels)
-                print()
-                print(refs)
-                print()
-                print(preds)
-                break
+                    for i in pr:
+                        preds.append(1 if i[0] > 0 else 0)
+                total += len(refs)
+                correct += (np.asarray(refs) == np.asarray(preds)).sum().item()
             print('Test Accuracy {} %'.format(100 * correct / total))
 
         write_answers(refs, preds, config.dir_answers)
