@@ -143,17 +143,9 @@ class MyModel(BaseModel):
                     pr = outputs[:].detach().cpu().numpy()
                     for i in pr:
                         preds.append(1 if i[0] > 0 else 0)
-                total += len(refs)
-                correct_in_batch = (np.asarray(refs) == np.asarray(preds)).sum().item()
-                correct += correct_in_batch
-                prog.update(k + 1, [
-                    ("acc", correct / total),
-                    ("correct", correct),
-                    ("total", total),
-                    ("cur", correct_in_batch / len(refs))
-                ])
-                if k > 400:
-                    break
+                total = len(refs)
+                correct = (np.asarray(refs) == np.asarray(preds)).sum().item()
+                prog.update(k + 1, [ ("acc", correct / total) ])
         self.logger.info("- Evaluating: {}".format(prog.info))
         write_answers(refs, preds, config.dir_answers, path_label)
 
