@@ -56,10 +56,13 @@ def getTorchDataLoaderByWSI(config):
               help='Path to model json config')
 @click.option('--output', default="results/local/",
               help='Dir for results and model weights')
-def main(data, training, model, output):
+@click.option('--gpu', default="1",
+              help='cuda:1')
+def main(data, training, model, output, gpu):
     # Load configs
     dir_output = output
     config = Config([data, training, model])
+    config.device = "cuda:"+gpu
     config.save(dir_output)
 
     loader_train, loader_valid, val = getTorchDataLoaderByWSI(config)
