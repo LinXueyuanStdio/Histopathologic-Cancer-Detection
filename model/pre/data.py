@@ -9,6 +9,47 @@ import os
 import numpy as np
 import pandas as pd
 import cv2
+from PIL import Image
+
+
+class MainDataset(Dataset):
+    def __init__(self, x_dataset, y_dataset, x_tfms):
+        self.x_dataset = x_dataset
+        self.y_dataset = y_dataset
+        self.x_tfms = x_tfms
+
+    def __len__(self):
+        return self.x_dataset.__len__()
+
+    def __getitem__(self, index):
+        x = self.x_dataset[index]
+        y = self.y_dataset[index]
+        if self.x_tfms is not None:
+            x = self.x_tfms(x)
+        return x, y
+
+
+class ImageDataset(Dataset):
+    def __init__(self, paths_to_imgs):
+        self.paths_to_imgs = paths_to_imgs
+
+    def __len__(self):
+        return len(self.paths_to_imgs)
+
+    def __getitem__(self, index):
+        img = Image.open(self.paths_to_imgs[index])
+        return img
+
+
+class LabelDataset(Dataset):
+    def __init__(self, labels):
+        self.labels = labels
+
+    def __len__(self):
+        return len(self.labels)
+
+    def __getitem__(self, index):
+        return self.labels[index]
 
 
 class DataFrameDataset(Dataset):

@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 
 def return_tumor_or_not(dic, one_id):
@@ -91,7 +92,7 @@ def generate_split(train_label_path, wsi_path):
 
 if __name__ == "__main__":
     data_dir = '/mnt/d/project/AI.Health.kaggle/'
-    label_dir = './data/'
+    label_dir = '../../data/'
     train_path = data_dir+'train/'
     test_path = data_dir+'test/'
     train_label_path = label_dir+'full_train_labels.csv'
@@ -100,3 +101,21 @@ if __name__ == "__main__":
 
     print(len(train_ids), len(cv_ids), len(train_labels), len(cv_labels))
     print(train_ids[:5], cv_ids[:5], train_labels[:5], cv_labels[:5])
+'''
+Amount of train labels: 175144, 72019/103125
+Amount of cv labels: 44881, 17098/27783
+Percentage of cv labels: 0.2039813657538916
+175144 44881 175144 44881
+['4faf2b15c22cc437fb16fb11b2f59f2a44afb88c',
+ '67b241cf6dfb3e486bea7ca652500e59783eb124',
+ '0e0a49f00652b915dd6afc661c9bee4eb7f75723',
+ 'a912e404d73397e65f7bfd4630f2a13ad800fe47',
+ 'ba5ba4d9622b91f44a3f1bca709c7a7344b5bf78']
+['a0e35f55df27bfe6a43894780333f202108da95c',
+ '781a505340288d069b646d63eb0897528cecf752',
+ 'efcf1f070efa0100968773c522af474f561cee40',
+ '381e7a49d67485b2cb084b6e5134a71443d44b5d',
+ 'a08962087ec1477dbec7cdf48a2d13c5d0070cbd']
+[0, 1, 0, 1, 0]
+[0, 0, 0, 0, 0]
+'''
