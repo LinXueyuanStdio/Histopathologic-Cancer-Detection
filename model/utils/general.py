@@ -86,7 +86,7 @@ def delete_file(path_file):
         pass
 
 
-def write_answers(references, hypotheses, dir_name, path):
+def write_answers(references, hypotheses, dir_name, sub):
     """Writes text answers in files.
 
     One file for the reference, one file for each hypotheses
@@ -108,7 +108,6 @@ def write_answers(references, hypotheses, dir_name, path):
     init_dir(dir_name)
     file_names = [dir_name + "ref.csv", dir_name + "hyp.csv"]
     assert len(references) == len(hypotheses)
-    sub = pd.read_csv(path)
     write_file(file_names[0], references, sub)
     write_file(file_names[1], hypotheses, sub)
 

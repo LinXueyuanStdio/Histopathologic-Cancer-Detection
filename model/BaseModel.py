@@ -74,6 +74,7 @@ class BaseModel(object):
 
         """
         _criterion_method = criterion_method
+        print(criterion_method)
 
         if _criterion_method == 'CrossEntropyLoss':
             self.criterion = torch.nn.CrossEntropyLoss()
@@ -97,7 +98,7 @@ class BaseModel(object):
             model_path: weights path "model_weights/model.cpkt"
 
         """
-        self.logger.info("Reloading the latest trained model...")
+        self.logger.info("- Reloading the latest trained model...")
         if model_path == None:
             self.model.load_state_dict(torch.load(self._model_path, map_location=map_location))
         else:
@@ -109,7 +110,7 @@ class BaseModel(object):
         torch.save(self.model.state_dict(), self._model_path)
         self.logger.info("- Saved model in {}".format(self._dir_model))
 
-    def train(self, config, train_set, val_set, lr_schedule):
+    def train(self, config, train_set, val_set, lr_schedule, path_label):
         """Global training procedure
 
         Calls method self.run_epoch and saves weights if score improves.
@@ -121,6 +122,7 @@ class BaseModel(object):
             train_set: Dataset instance
             val_set: Dataset instance
             lr_schedule: LRSchedule instance that takes care of learning proc
+            path_label: dataframe
 
         Returns:
             best_score: (float)
@@ -134,7 +136,7 @@ class BaseModel(object):
             self.logger.info("Epoch {:}/{:}".format(epoch+1, config.n_epochs))
 
             # epoch
-            score = self._run_train_epoch(config, train_set, val_set, epoch, lr_schedule)
+            score = self._run_train_epoch(config, train_set, val_set, epoch, lr_schedule, path_label)
 
             # save weights if we have new best score on eval
             if best_score is None or score >= best_score:
@@ -151,7 +153,7 @@ class BaseModel(object):
 
         return best_score
 
-    def _run_train_epoch(config, train_set, val_set, epoch, lr_schedule):
+    def _run_train_epoch(config, train_set, val_set, epoch, lr_schedule, path_label):
         """Model_specific method to overwrite
 
         Performs an epoch of training
@@ -170,7 +172,7 @@ class BaseModel(object):
         """
         raise NotImplementedError
 
-    def evaluate(self, config, test_set):
+    def evaluate(self, config, test_set, path_label):
         """Evaluates model on test set
 
         Calls method run_evaluate on test_set and takes care of logging
@@ -178,13 +180,14 @@ class BaseModel(object):
         Args:
             config: Config
             test_set: instance of class Dataset
+            path_label: dataframe
 
         Return:
             scores: (dict) scores["acc"] = 0.85 for instance
 
         """
         self.logger.info("- Evaluating...")
-        scores = self._run_evaluate_epoch(config, test_set)  # evaluate
+        scores = self._run_evaluate_epoch(config, test_set, path_label)  # evaluate
         msg = " ... ".join([" {} is {:04.2f} ".format(k, v) for k, v in scores.items()])
         self.logger.info("- Eval: {}".format(msg))
 

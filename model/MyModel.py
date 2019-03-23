@@ -51,7 +51,7 @@ class MyModel(BaseModel):
 
         self.logger.info("- done.")
 
-    def _run_train_epoch(self, config, train_set, val_set, epoch, lr_schedule):
+    def _run_train_epoch(self, config, train_set, val_set, epoch, lr_schedule, path_label):
         """Performs an epoch of training
 
         Args:
@@ -96,13 +96,13 @@ class MyModel(BaseModel):
             "batch_size": config.batch_size,
             "model": config.model
         })
-        scores = self.evaluate(config_eval, val_set)
+        scores = self.evaluate(config_eval, val_set, path_label)
         score = scores["acc"]
         lr_schedule.update(score=score)
 
         return -score
 
-    def _run_evaluate_epoch(self, config, test_set):
+    def _run_evaluate_epoch(self, config, test_set, path_label):
         """Performs an epoch of evaluation
 
         Args:
@@ -139,7 +139,7 @@ class MyModel(BaseModel):
                 correct += (np.asarray(refs) == np.asarray(preds)).sum().item()
             print('Test Accuracy {} %'.format(100 * correct / total))
 
-        write_answers(refs, preds, config.dir_answers, config.path_label_test)
+        write_answers(refs, preds, config.dir_answers, path_label)
 
         return {
             "acc": 100 * correct / total
