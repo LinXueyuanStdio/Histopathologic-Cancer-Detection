@@ -139,7 +139,7 @@ class MyModel(BaseModel):
                 correct += (np.asarray(refs) == np.asarray(preds)).sum().item()
             print('Test Accuracy {} %'.format(100 * correct / total))
 
-        write_answers(refs, preds, config.dir_answers)
+        write_answers(refs, preds, config.dir_answers, config.path_label_test)
 
         return {
             "acc": 100 * correct / total

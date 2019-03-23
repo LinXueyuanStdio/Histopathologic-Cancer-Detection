@@ -7,6 +7,7 @@ import subprocess
 import shlex
 from shutil import copyfile
 import json
+import pandas as pd
 from threading import Timer
 from os import listdir
 from os.path import isfile, join
@@ -85,7 +86,7 @@ def delete_file(path_file):
         pass
 
 
-def write_answers(references, hypotheses, dir_name):
+def write_answers(references, hypotheses, dir_name, path):
     """Writes text answers in files.
 
     One file for the reference, one file for each hypotheses
@@ -99,16 +100,16 @@ def write_answers(references, hypotheses, dir_name):
         file_names: list of the created files
 
     """
-    def write_file(file_name, list_of_list):
-        print("writting file ", file_name)
-        with open(file_name, "w") as f:
-            for line in list_of_list:
-                f.write(str(line) + "\n")
+    def write_file(file_name, list_of_list, sub):
+        print("> writting file ", file_name)
+        sub['label'] = list_of_list
+        sub.to_csv(file_name, index=False)
 
     init_dir(dir_name)
     file_names = [dir_name + "ref.csv", dir_name + "hyp.csv"]
     assert len(references) == len(hypotheses)
-    write_file(file_names[0], references)
-    write_file(file_names[1], hypotheses)
+    sub = pd.read_csv(path)
+    write_file(file_names[0], references, sub)
+    write_file(file_names[1], hypotheses, sub)
 
     return file_names
