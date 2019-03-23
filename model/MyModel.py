@@ -106,7 +106,7 @@ class MyModel(BaseModel):
         score = scores["acc"]
         lr_schedule.update(score=score)
 
-        return -score
+        return score
 
     def _run_evaluate_epoch(self, config, test_set, path_label):
         """Performs an epoch of evaluation
@@ -145,7 +145,7 @@ class MyModel(BaseModel):
                         preds.append(1 if i[0] > 0 else 0)
                 total = len(refs)
                 correct = (np.asarray(refs) == np.asarray(preds)).sum().item()
-                prog.update(k + 1, [ ("acc", correct / total) ])
+                prog.update(k + 1, [("acc", correct / total), ("correct", correct), ("total", total)])
         self.logger.info("- Evaluating: {}".format(prog.info))
         write_answers(refs, preds, config.dir_answers, path_label)
 
