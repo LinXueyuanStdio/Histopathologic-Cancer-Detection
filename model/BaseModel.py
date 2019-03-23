@@ -56,7 +56,7 @@ class BaseModel(object):
 
         """
         _lr_m = lr_method.lower()  # lower to make sure
-        print("--- " + lr_method)
+        print("  - " + lr_method)
         if _lr_m == 'adam':  # sgd method
             self.optimizer = torch.optim.Adam(self.model.parameters(), lr=lr)
         elif _lr_m == 'adamax':
@@ -66,6 +66,7 @@ class BaseModel(object):
         else:
             raise NotImplementedError("Unknown method {}".format(_lr_m))
 
+        print("  - lr_scheduler.CosineAnnealingLR")
         self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=5, eta_min=4e-08)
 
     def _add_criterion(self, criterion_method):
@@ -76,7 +77,7 @@ class BaseModel(object):
 
         """
         _criterion_method = criterion_method
-        print("--- " + criterion_method)
+        print("  - " + criterion_method)
 
         if _criterion_method == 'CrossEntropyLoss':
             self.criterion = torch.nn.CrossEntropyLoss()
