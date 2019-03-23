@@ -1,4 +1,5 @@
-from model.pre.data import ImageDataset, LabelDataset, MainDataset, trans_test
+from model.pre.data import ImageDataset, LabelDataset, MainDataset
+from model.pre.transforms import trans_test
 from model.pre.split_data import generate_split
 # from data import ImageDataset, LabelDataset, MainDataset, trans_test
 # from split_data import generate_split

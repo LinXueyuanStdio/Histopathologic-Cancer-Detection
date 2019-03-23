@@ -3,7 +3,8 @@ import click
 from model.MyModel import MyModel
 from model.utils.lr_schedule import LRSchedule
 from model.utils.Config import Config
-from model.pre.data import DataFrameDataset, trans_train, trans_valid
+from model.pre.data import DataFrameDataset
+from model.pre.transforms import trans_train, trans_valid
 from model.pre.split_data import generate_split
 from model.pre.data_loder import getDataLoder
 from torch.utils.data import TensorDataset, DataLoader, Dataset

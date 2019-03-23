@@ -83,6 +83,12 @@ class MyModel(BaseModel):
                 loss = self.criterion(outputs, labels.view(-1, 1).type(torch.FloatTensor).to(self.device))
             self._auto_backward(loss)
 
+            # scheduler.step()
+            # scheduler.get_lr
+            # 衰减学习率
+            for param_group in self.optimizer.param_groups:
+                param_group['lr'] = lr_schedule.lr
+
             prog.update(i + 1, [("loss", loss.item()), ("lr", lr_schedule.lr)])
             # update learning rate
             lr_schedule.update(batch_no=epoch*nbatches + i)
@@ -115,12 +121,14 @@ class MyModel(BaseModel):
 
         """
         self.model.eval()
+        nbatches = len(test_set)
+        prog = Progbar(nbatches)
         with torch.no_grad():
             correct = 0
             total = 0
             preds = []
             refs = []
-            for images, labels in test_set:
+            for i, (images, labels) in enumerate(test_set):
                 images = images.to(self.device)
                 labels = labels.to(self.device)
                 outputs = self.model(images)
@@ -137,8 +145,8 @@ class MyModel(BaseModel):
                         preds.append(1 if i[0] > 0 else 0)
                 total += len(refs)
                 correct += (np.asarray(refs) == np.asarray(preds)).sum().item()
-            print('Test Accuracy {} %'.format(100 * correct / total))
-
+                prog.update(i + 1, [("acc", 100 * correct / total)])
+        self.logger.info("- Evaluating: {}".format(prog.info))
         write_answers(refs, preds, config.dir_answers, path_label)
 
         return {
