@@ -146,7 +146,7 @@ class BaseModel(object):
             score = self._run_train_epoch(config, train_set, val_set, epoch, lr_schedule, path_label)
 
             # save weights if we have new best score on eval
-            if best_score is None or abs(score-0.5) <= abs(best_score-0.5):
+            if best_score is None or score >= best_score: #abs(score-0.5) <= abs(best_score-0.5):
                 best_score = score
                 self.logger.info("- New best score ({:04.2f})!".format(best_score))
                 self.save()
