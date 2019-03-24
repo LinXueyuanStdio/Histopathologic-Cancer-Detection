@@ -41,8 +41,9 @@ class MyModel(BaseModel):
         self.logger.info("- done.")
 
     def build_model(self, model="CNN", device="cpu"):
-        self.device = torch.device(device if torch.cuda.is_available() else 'cpu')
         self.logger.info("   - "+model)
+        self.logger.info("   - "+device)
+        self.device = torch.device(device if torch.cuda.is_available() else 'cpu')
         if model == "CNN":
             self.model = SimpleCNN()
         elif model == "ResNet9":
