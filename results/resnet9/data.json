@@ -9,6 +9,7 @@
     "path_label_val"  : "data/full_val_labels.csv",
     "path_label_test" : "data/full_test_labels.csv",
 
+    "wsi": false,
     "bucket_train": true,
     "bucket_val": true,
     "bucket_test": true
