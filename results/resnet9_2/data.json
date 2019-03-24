@@ -1,0 +1,15 @@
+{
+    "export_name": "data.json",
+
+    "dir_images_train": "/data0/yanglab/competitions/Histopathologic_Cancer_Detection/data/train/",
+    "dir_images_test" : "/data0/yanglab/competitions/Histopathologic_Cancer_Detection/data/test/",
+    "dir_images_val"  : "/data0/yanglab/competitions/Histopathologic_Cancer_Detection/data/val/",
+
+    "path_label_train": "data/full_train_labels.csv",
+    "path_label_val"  : "data/full_val_labels.csv",
+    "path_label_test" : "data/full_test_labels.csv",
+
+    "bucket_train": true,
+    "bucket_val": true,
+    "bucket_test": true
+}
