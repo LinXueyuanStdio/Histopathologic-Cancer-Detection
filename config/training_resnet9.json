@@ -4,7 +4,7 @@
     "lr_method": "Adam",
     "criterion_method": "BCEWithLogitsLoss",
     "n_epochs": 50,
-    "batch_size": 50,
+    "batch_size": 150,
     "dropout": 1,
     "lr_init": 1e-3,
     "lr_min": 1e-4,
