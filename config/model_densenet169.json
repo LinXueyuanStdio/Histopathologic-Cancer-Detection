@@ -1,0 +1,4 @@
+{
+    "export_name": "model.json",
+    "model": "DenseNet169"
+}

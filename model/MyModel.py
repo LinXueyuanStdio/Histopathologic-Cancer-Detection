@@ -1,6 +1,7 @@
 from model.BaseModel import BaseModel
 from model.components.SimpleCNN import SimpleCNN
 from model.components.ResNet import ResNet9
+from model.components.DenseNet import DenseNet169
 from model.utils.Progbar import Progbar
 from model.utils.Config import Config
 from model.utils.general import write_answers
@@ -45,8 +46,10 @@ class MyModel(BaseModel):
         self.device = torch.device(config.device if torch.cuda.is_available() else 'cpu')
         if config.model == "CNN":
             self.model = SimpleCNN()
-        else:
+        elif config.model == "ResNet9":
             self.model = ResNet9()
+        elif config.model == "DenseNet169":
+            self.model = DenseNet169(pretrained=True)
         self.model = self.model.to(self.device)
 
         self.logger.info("- done.")
