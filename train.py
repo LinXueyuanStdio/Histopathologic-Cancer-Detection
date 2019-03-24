@@ -46,6 +46,18 @@ def getTorchDataLoaderByWSI(config):
 
     return loader_train, loader_valid, val
 
+def getTorchDataLoaderByFuck(config):
+    train = pd.read_csv(config.path_label_train)
+    val = pd.read_csv(config.path_label_test)
+    print("- Train: {}, Val: {}".format(len(train), len(val)))
+
+    dataset_train = DataFrameDataset(df_data=train, data_dir=config.dir_images_train, transform=trans_train)
+    dataset_valid = DataFrameDataset(df_data=val, data_dir=config.dir_images_test, transform=trans_valid)
+
+    loader_train = DataLoader(dataset=dataset_train, batch_size=config.batch_size, shuffle=True, num_workers=3)
+    loader_valid = DataLoader(dataset=dataset_valid, batch_size=config.batch_size//2, shuffle=False, num_workers=3)
+
+    return loader_train, loader_valid, val
 
 @click.command()
 @click.option('--data', default="config/data.json",
@@ -65,10 +77,12 @@ def main(data, training, model, output, gpu):
     config.device = "cuda:"+gpu
     config.save(dir_output)
 
-    if config.wsi:
+    if config.data_loader == "WSI":
         loader_train, loader_valid, val = getTorchDataLoaderByWSI(config)
-    else:
+    elif  config.data_loader == "RandomPatch":
         loader_train, loader_valid, val = getTorchDataLoaderByRandomPatch(config)
+    else:
+        loader_train, loader_valid, val = getTorchDataLoaderByFuck(config)
 
     # Define learning rate schedule
     n_batches_epoch = len(loader_train)

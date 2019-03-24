@@ -9,7 +9,7 @@
     "path_label_test" : "data/small_test_labels.csv",
     "path_label_val"  : "data/small_val_labels.csv",
 
-    "wsi": false,
+    "data_loader": "Fuck",
     "bucket_train": true,
     "bucket_val": true,
     "bucket_test": true
