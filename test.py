@@ -48,13 +48,13 @@ def main(data, training, model, output):
     config.dir_answers = dir_output + "formulas_test/"
 
     # Load datasets
-    loader_train, loader_valid, val = getTorchDataLoaderByWSI(config)
+#     loader_train, loader_valid, val = getTorchDataLoaderByWSI(config)
 #     train_ids, cv_ids, train_labels, cv_labels = generate_split(train_label_path, wsi_path)
-#     val = pd.read_csv(config.path_label_test)
-#     print("- There are {} items to test.".format(val.shape[0]))
+    val = pd.read_csv(config.path_label_test)
+    print("- There are {} items to test.".format(val.shape[0]))
 
-#     dataset_valid = DataFrameDataset(df_data=val, data_dir=config.dir_images_test, transform=trans_valid)
-#     loader_valid = DataLoader(dataset=dataset_valid, batch_size=config.batch_size//2, shuffle=False, num_workers=3)
+    dataset_valid = DataFrameDataset(df_data=val, data_dir=config.dir_images_test, transform=trans_valid)
+    loader_valid = DataLoader(dataset=dataset_valid, batch_size=config.batch_size//2, shuffle=False, num_workers=3)
 
     # Build model and train
     model = MyModel(config, dir_output)
