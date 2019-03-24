@@ -93,6 +93,10 @@ class BaseModel(object):
         loss.backward()
         self.optimizer.step()
 
+    def auto_restore(self):
+        if os.path.exists(self._model_path) and os.path.isfile(self._model_path):
+            self.restore()
+
     def restore(self, model_path=None, map_location='cpu'):
         """Reload weights into session
 

@@ -82,6 +82,7 @@ def main(data, training, model, output, gpu):
     # Build model and train
     model = MyModel(config, dir_output)
     model.build_train(config)
+    model.auto_restore()
     model.train(config, loader_train, loader_valid, lr_schedule, val)
 
 
