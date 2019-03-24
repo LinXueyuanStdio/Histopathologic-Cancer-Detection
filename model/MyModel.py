@@ -29,12 +29,7 @@ class MyModel(BaseModel):
         """
         self.logger.info("- Building model...")
 
-        self.device = torch.device(config.device if torch.cuda.is_available() else 'cpu')
-        if config.model == "CNN":
-            self.model = SimpleCNN()
-        else:
-            self.model = ResNet9()
-        self.model = self.model.to(self.device)
+        self.build_model(config.model, config.device)
         self._add_criterion(config.criterion_method)
         self._add_optimizer(config.lr_method, config.lr_init)
 
@@ -42,17 +37,19 @@ class MyModel(BaseModel):
 
     def build_pred(self, config):
         self.logger.info("- Building model...")
+        self.build_model(config.model, config.device)
+        self.logger.info("- done.")
 
-        self.device = torch.device(config.device if torch.cuda.is_available() else 'cpu')
-        if config.model == "CNN":
+    def build_model(self, model="CNN", device="cpu"):
+        self.device = torch.device(device if torch.cuda.is_available() else 'cpu')
+        self.logger.info("   - "+model)
+        if model == "CNN":
             self.model = SimpleCNN()
-        elif config.model == "ResNet9":
+        elif model == "ResNet9":
             self.model = ResNet9()
-        elif config.model == "DenseNet169":
+        elif model == "DenseNet169":
             self.model = DenseNet169(pretrained=True)
         self.model = self.model.to(self.device)
-
-        self.logger.info("- done.")
 
     def _run_train_epoch(self, config, train_set, val_set, epoch, lr_schedule, path_label):
         """Performs an epoch of training
